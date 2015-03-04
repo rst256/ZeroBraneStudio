@@ -425,7 +425,41 @@ function LoadLuaConfig(filename,isstring)
   if not cfgfn then
     report(("Error while loading configuration %s: '%s'."):format(msg, err))
   else
-    setfenv(cfgfn,ide.config)
+		local LuaGetConfigEnv = setmetatable({
+			Hotkeys = function(key_map)
+				if type(key_map) ~= "table" then
+					error("Hotkeys table must be a table", 2);
+				else
+					for id, key in _G.pairs(key_map) do
+            local t_id = type(id), id_int
+            if t_id == "number" then 
+              id_int = id
+            elseif t_id == "string" then 
+              if id:sub(1, 3) == "ID_" then
+                id_int = _G[id]
+              else
+                id_int = _G["ID_".._G.string.upper(id)]
+              end
+            else
+              error("Invalid hotkey id: "..tostring(id), 2)
+            end
+            if id_int then
+              if type(key) == "string" then
+                ide.config.keymap[id_int] = key
+              else
+              	error("Invalid hotkey xcode for: "..tostring(id)..", xcode must be a string", 2)
+              end
+            else
+              error("Unknown hotkey action: "..tostring(id), 2)
+            end
+					end
+				end
+			end
+		}, {
+			__index = ide.config,
+			__newindex = ide.config 
+		})
+	  setfenv(cfgfn, LuaGetConfigEnv or ide.config)
     local _, err = pcall(function()cfgfn(assert(_G or _ENV))end)
     if err then
       report(("Error while processing configuration %s: '%s'."):format(msg, err))
