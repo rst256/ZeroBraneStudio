@@ -86,6 +86,10 @@ local G = ...
 styles = G.loadfile('cfg/tomorrow.lua')('Tomorrow')
 -- also apply the same scheme to Output and Console windows
 stylesoutshell = styles
+-- also apply the same scheme text styles to Aux window
+styles.auxwindow = styles.text
+-- also apply the same scheme text styles to Calltip window
+styles.calltip = styles.text
 
 -- to change markers used in console and output windows
 styles.marker = styles.marker or {}
