@@ -68,12 +68,11 @@ end
 function ide:GetRootPath(path)
   return MergeFullPath(GetPathWithSep(ide.editorFilename), path or '')
 end
+
 function ide:GetPackagePath(packname)
-  return MergeFullPath(
-    ide.oshome and MergeFullPath(ide.oshome, '.'..ide:GetAppName()..'/') or ide:GetRootPath(),
-    MergeFullPath('packages', packname or '')
-  )
+  return MergeFullPath(GetPathWithSep(ide.editorFilename), "packages/"..packname)
 end
+
 function ide:GetApp() return self.editorApp end
 function ide:GetAppName() return ide.appname end
 function ide:GetEditor(index) return GetEditor(index) end
