@@ -209,6 +209,7 @@ function ActivateOutput()
   if bottomnotebook:GetSelection() ~= index then
     bottomnotebook:SetSelection(index)
   end
+  PackageEventHandle('onActivateOutput')
 end
 
 local function runInterpreter(wfilename, withdebugger)
